@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-const Settings = ({ saveSettings }) => {
-  const [workTime, setWorkTime] = useState(25);
-  const [shortBreak, setShortBreak] = useState(5);
-  const [longBreak, setLongBreak] = useState(15);
-  const [label, setLabel] = useState('');
+const Settings = ({ applySettings, saveSettings, currentSettings }) => {
+  const { user } = useContext(AuthContext);
+  const [workTime, setWorkTime] = useState(currentSettings.workTime);
+  const [shortBreak, setShortBreak] = useState(currentSettings.shortBreak);
+  const [longBreak, setLongBreak] = useState(currentSettings.longBreak);
+  const [label, setLabel] = useState(currentSettings.label || '');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setWorkTime(currentSettings.workTime);
+    setShortBreak(currentSettings.shortBreak);
+    setLongBreak(currentSettings.longBreak);
+    setLabel(currentSettings.label || '');
+  }, [currentSettings]);
+
+  const handleApply = (e) => {
     e.preventDefault();
-    saveSettings({ workTime, shortBreak, longBreak, label });
+    applySettings({ workTime, shortBreak, longBreak });
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    if (user) {
+      saveSettings({ workTime, shortBreak, longBreak, label });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 border border-gray-300 rounded-md shadow-md">
+    <form className="space-y-4 p-4 border border-gray-300 rounded-md shadow-md">
       <div>
         <label className="block text-sm font-medium text-gray-700">Work Time (minutes):</label>
         <input
@@ -40,16 +56,19 @@ const Settings = ({ saveSettings }) => {
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Label:</label>
-        <input
-          type="text"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-        />
-      </div>
-      <button type="submit" className="btn">Save Settings</button>
+      {user && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Label:</label>
+          <input
+            type="text"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+      )}
+      <button onClick={handleApply} className="btn">Apply</button>
+      {user && <button onClick={handleSave} className="btn ml-4">Save to Profile</button>}
     </form>
   );
 };

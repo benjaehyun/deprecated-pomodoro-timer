@@ -10,6 +10,10 @@ const settingsSchema = new mongoose.Schema({
     type: Number,
     default: 25, // Default work time in minutes
   },
+  label: {
+    type: String,
+    default: 'Custom',
+  },
   shortBreak: {
     type: Number,
     default: 5, // Default short break time in minutes

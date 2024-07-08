@@ -18,6 +18,20 @@ const sessionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  startTime: {
+    type: Date,
+    required: true,
+  },
+  endTime: {
+    type: Date,
+    required: true,
+  },
+  pauses: [
+    {
+      start: { type: Date, required: true },
+      end: { type: Date, required: true }
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
