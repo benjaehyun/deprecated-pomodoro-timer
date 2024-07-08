@@ -7,7 +7,7 @@ const Timer = ({ settings }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [cycle, setCycle] = useState('work');
-  const [volume, setVolume] = useState(localStorage.getItem('volume') || 1);
+  const [volume, setVolume] = useState(localStorage.getItem('volume') || 0.5);
   const [audioOption, setAudioOption] = useState(localStorage.getItem('audioOption') || '/water-droplet.mp3');
   const audioRef = useRef(null);
 
